@@ -117,7 +117,7 @@ export const deletarAnimal = (req, res) => {
     const animal = instancia.removeAnimal(id);
 
     if(!animal){
-        return res.status(400).send({ message: "Nenhum animal encontrado!", origem:"Controller!" });
+        return res.status(200).send({ message: `Animal ${id} excluído!`, origem:"Controller!" });
     }
 
     instancia.removeAnimal(id);
