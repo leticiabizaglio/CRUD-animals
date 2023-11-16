@@ -6,27 +6,49 @@ const instancia = new animalsList();
 export const buscarTodosAnimais = (req, res) => {
     
     const animals = instancia.getAllAnimals();
-    // const {tipoanimal} = req.query;
+
+    const {tipo} = req.query;
+    
+    if(tipo){
+        const filter = animals.filter((animal) => animal.tipo == tipo);
+        if(!filter.length){
+            return res.status(404).send({message: "Não há animais cadastrados com esse tipo!", origem:"Not Found!"});
+        }
+        filter.forEach((animal) => {
+            if(animal.vacinado == true){
+                animal.vacinado = "Sim";
+            }
+            else{
+                animal.vacinado = "Não";
+            }
+        });
+        return res.status(200).send({message: `Número de animais cadstrados por esse tipo é ${filter.length}`, origem:"Controller!", data: filter });
+    }
+    if(!animals.length ){
+        return res.status(404).send({message: "Não há animais cadastrados!", origem:"Not Found!"});
+    }
+    return res.status(200).send({message: `Numero de animais cadastrados é ${animals.length}`, origem:"Controller!", data: animals });
+
+    //  const {tipoanimal} = req.query;
 
     // if(tipoanimal){
-    //     const filterAnimals = animals.filter((animal) => animal.tipoanimal === tipoanimal);
-    //     if(!filterAnimals.length){
-    //         return res.status(404).send({message: "Não há animais cadastrados com esse tipo!", origem:"Not Found!"});
-    //     }
-    //     return res.status(200).send({message: `Numero de animais cadastrados por esse tipo é ${filterAnimals.length}`, contador: `${animals.length}` });
-    // }
+    //      const filterAnimals = animals.filter((animal) => animal.tipoanimal === tipoanimal);
+    //      if(!filterAnimals.length){
+    //          return res.status(404).send({message: "Não há animais cadastrados com esse tipo!", origem:"Not Found!"});
+    //      }
+    //      return res.status(200).send({message: `Numero de animais cadastrados por esse tipo é ${filterAnimals.length}`, contador: `${animals.length}` });
+    //  }
 
-    const animalzinhos = instancia.getAllAnimals();
+    // const animalzinhos = instancia.getAllAnimals();
     
-    const contadorPorTipo = {};
-
-    animalzinhos.forEach((animal) => {
-        if (!contadorPorTipo[animal.tipo]) {
-            contadorPorTipo[animal.tipo] = 1;
-        } else {
-            contadorPorTipo[animal.tipo]++;
-        }
-    });
+    // const contadorPorTipo = {};
+    // animalzinhos.forEach((animal) => {
+    //     if (!contadorPorTipo[animal.tipo]) {
+    //         contadorPorTipo[animal.tipo] = 1;
+    //     } else {
+    //         contadorPorTipo[animal.tipo]++;
+    //     }
+    // });
     return res.status(200).send({message: "Todos animais via controller!", status: "Ok!", data: animals, contadorPorTipo: contadorPorTipo, contadorTotal: animals.length 
     });
 
